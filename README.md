@@ -1,7 +1,7 @@
 # dagu-docker
 
-
-```yaml title="docker-compose.yml"
+docker-compose.yml
+```yaml
 services:
   dagu:
     container_name: dagu
