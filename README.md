@@ -1,7 +1,7 @@
 # dagu-docker
 
-docker-compose.yml
 
+```yaml title="docker-compose.yml"
 services:
   dagu:
     container_name: dagu
@@ -15,3 +15,5 @@ services:
       - /path/to/dagu/data:/app
     ports:
       - 8145:8080
+```
+
