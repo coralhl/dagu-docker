@@ -12,7 +12,7 @@ RUN mkdir /app && \
     unzip /app/tmp.zip -d /app && \
     rm /app/tmp.zip && \
     mv /app/dagu-${VERSION}/* /app/ && \
-	cp -r /app/ui/* /app
+    cp -r /app/ui/* /app
 
 WORKDIR /app
 
@@ -39,38 +39,34 @@ RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build -ldflags="${LDFLAGS}" -o ./bin/da
 # Stage 3: Final Image
 FROM --platform=$BUILDPLATFORM alpine:latest
 
-ARG USER="dagu"
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
+ARG USER="abc"
+ARG PUID=1000
+ARG PGID=1000
 
-# Create user and set permissions
-RUN apk update && \
-    apk add --no-cache sudo tzdata bash bash-completion && \
-    addgroup -g ${USER_GID} ${USER} && \
-    adduser ${USER} -h /home/${USER} -u ${USER_UID} -G ${USER} -D -s /bin/bash && \
-    echo ${USER} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USER} && \
-    chmod 0440 /etc/sudoers.d/${USER}
-
-USER ${USER}
-WORKDIR /home/${USER}
-
-COPY --from=go-builder /app/bin/dagu /usr/local/bin/
-
-RUN mkdir -p .dagu/dags
-
-# Add the hello_world.yaml file
-COPY <<EOF .dagu/dags/hello_world.yaml
-schedule: "* * * * *"
-steps:
-  - name: hello world
-    command: sh
-    script: |
-      echo "Hello, world!"
-EOF
-
+ENV TZ=Europe/Moscow
 ENV DAGU_HOST=0.0.0.0
 ENV DAGU_PORT=8080
+ENV DAGU_HOME=/app
 
-EXPOSE 8080
+COPY --from=go-builder /app/bin/dagu /usr/local/bin/
+COPY files/start.sh /start.sh
+COPY files/lsiown /usr/bin/lsiown
 
-CMD ["dagu", "start-all"]
+# Create user, set permissions, set default TZ
+RUN apk update && \
+    apk add --no-cache bash bash-completion shadow sudo tzdata && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
+    addgroup -g ${PGID} ${USER} && \
+    adduser ${USER} -h /home/${USER} -u ${PUID} -G ${USER} -D -s /bin/bash && \
+    usermod -a -G wheel ${USER} && \
+    sed -i -e "s/^#.%wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/" /etc/sudoers && \
+    chmod +x /start.sh && \
+    chmod +x /usr/bin/lsiown
+
+USER ${USER}
+
+WORKDIR /app
+
+EXPOSE ${DAGU_PORT}
+
+CMD ["/start.sh"]
