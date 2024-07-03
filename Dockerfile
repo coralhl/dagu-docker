@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 
-ARG VERSION=1.12.11
+ARG VERSION=1.13.0
 
 # Stage 1: UI Builder
 FROM --platform=$BUILDPLATFORM node:18-alpine as ui-builder
