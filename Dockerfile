@@ -54,7 +54,7 @@ COPY files/lsiown /usr/bin/lsiown
 
 # Create user, set permissions, set default TZ
 RUN apk update && \
-    apk add --no-cache bash bash-completion shadow sudo tzdata && \
+    apk add --no-cache bash bash-completion openssh shadow sudo tzdata && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
     addgroup -g ${PGID} ${USER} && \
     adduser ${USER} -h /home/${USER} -u ${PUID} -G ${USER} -D -s /bin/bash && \
