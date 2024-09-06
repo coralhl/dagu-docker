@@ -3,7 +3,7 @@ steps:
     image: debian
     commands:
       - VERSION=$(cat "VERSION")
-      - export 
+      - export VERSION=$VERSION
 
   build-image:
     image: woodpeckerci/plugin-docker-buildx
