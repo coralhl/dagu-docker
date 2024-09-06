@@ -1,7 +1,7 @@
 ARG VERSION
 
 # Stage 1: UI Builder
-FROM --platform=$BUILDPLATFORM node:18-alpine as ui-builder
+FROM --platform=$BUILDPLATFORM node:18-alpine AS ui-builder
 
 ARG VERSION
 
@@ -21,7 +21,7 @@ RUN rm -rf node_modules && \
     yarn build
 
 # Stage 2: Go Builder
-FROM --platform=$BUILDPLATFORM golang:1.22-alpine as go-builder
+FROM --platform=$BUILDPLATFORM golang:1.22-alpine AS go-builder
 
 ARG LDFLAGS
 ARG TARGETOS
