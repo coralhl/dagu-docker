@@ -3,6 +3,7 @@ steps:
     image: debian
     commands:
       - VERSION=$(cat "VERSION")
+      - export 
 
   build-image:
     image: woodpeckerci/plugin-docker-buildx
@@ -16,7 +17,7 @@ steps:
         - linux/amd64
         - linux/arm64
       build_args:
-        - VERSION=${VERSION}
+        - VERSION=$VERSION
       tags:
         - latest
         - ${VERSION}
