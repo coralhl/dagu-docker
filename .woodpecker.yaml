@@ -1,9 +1,6 @@
 steps:
   build:
     image: woodpeckerci/plugin-docker-buildx
-    commands:
-      - tag_name=$(cat "VERSION")
-      - export tag_name=$${tag_name}
     settings:
       username:
         from_secret: dockerhub_username
@@ -14,7 +11,9 @@ steps:
         - linux/amd64
         - linux/arm64
       build_args:
-        - VERSION: 
+        - VERSION=${VERSION}
       tags:
       - latest
-      - $tag_name
+      - ${VERSION}
+      commands:
+      - VERSION=$(cat "VERSION")
