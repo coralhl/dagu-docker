@@ -31,8 +31,8 @@ COPY --from=ui-builder /app /app
 
 WORKDIR /app
 
-RUN go mod download && rm -rf service/frontend/assets
-COPY --from=ui-builder /app/dist/ ./service/frontend/assets/
+RUN go mod download && rm -rf internal/frontend/assets
+COPY --from=ui-builder /app/dist/ ./internal/frontend/assets/
 
 RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build -ldflags="${LDFLAGS}" -o ./bin/dagu .
 
