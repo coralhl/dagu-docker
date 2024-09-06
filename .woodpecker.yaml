@@ -13,7 +13,7 @@ steps:
       build_args:
         - VERSION=${VERSION}
       tags:
-      - latest
-      - ${VERSION}
-      commands:
+        - latest
+        - ${VERSION}
+    commands:
       - VERSION=$(cat "VERSION")

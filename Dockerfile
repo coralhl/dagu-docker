@@ -1,11 +1,9 @@
-# syntax=docker/dockerfile:1.4
-
-ARG VERSION=1.13.0
-
 # Stage 1: UI Builder
 FROM --platform=$BUILDPLATFORM node:18-alpine as ui-builder
 
 ARG VERSION
+
+LABEL version=$VERSION
 
 RUN mkdir /app && \
     wget -O /app/tmp.zip https://github.com/dagu-dev/dagu/archive/refs/tags/v${VERSION}.zip && \

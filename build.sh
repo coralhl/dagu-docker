@@ -12,6 +12,6 @@ else
   tag_name=$(cat "$versioning_file")
   echo "Let's buld & push image with tags *latest*, *$tag_name*"
   docker buildx build --progress=plain -f Dockerfile -t $user_name/$image_name:$tag_name -t $user_name/$image_name:latest .
-  #docker push $user_name/$image_name:$tag_name
-  #docker push $user_name/$image_name:latest
+  docker push $user_name/$image_name:$tag_name
+  docker push $user_name/$image_name:latest
 fi
