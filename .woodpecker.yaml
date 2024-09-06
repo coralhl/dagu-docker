@@ -17,7 +17,7 @@ steps:
         - linux/amd64
         - linux/arm64
       build_args:
-        - VERSION=$VERSION
+        - VERSION=${VERSION}
       tags:
         - latest
         - ${VERSION}
