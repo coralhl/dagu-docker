@@ -1,5 +1,10 @@
 steps:
-  build:
+  get-version:
+    image: debian
+    commands:
+      - VERSION=$(cat "VERSION")
+
+  build-image:
     image: woodpeckerci/plugin-docker-buildx
     settings:
       username:
@@ -15,5 +20,3 @@ steps:
       tags:
         - latest
         - ${VERSION}
-    commands:
-      - VERSION=$(cat "VERSION")
