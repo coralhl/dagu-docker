@@ -1,3 +1,5 @@
+ARG VERSION
+
 # Stage 1: UI Builder
 FROM --platform=$BUILDPLATFORM node:18-alpine as ui-builder
 
