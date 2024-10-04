@@ -4,6 +4,7 @@ when:
 steps:
   build-image:
     image: coralhl/woodpecker-buildx-plugin
+    privileged: true
     settings:
       repo: coralhl/dagu,zot.xciii.ru/coral/dagu
       platforms:
