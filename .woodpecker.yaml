@@ -1,5 +1,5 @@
 when:
-  - event: [push, tag, cron]
+  - event: [push, tag, cron, manual]
 
 steps:
   build-image:
