@@ -1,4 +1,4 @@
-ARG VERSION=1.15.1
+ARG VERSION=1.16.0
 
 # Stage 1: UI Builder
 FROM --platform=$BUILDPLATFORM node:18-alpine AS ui-builder
@@ -34,7 +34,7 @@ WORKDIR /app
 RUN go mod download && rm -rf internal/frontend/assets
 COPY --from=ui-builder /app/dist/ ./internal/frontend/assets/
 
-RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build -ldflags="${LDFLAGS}" -o ./bin/dagu .
+RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build -ldflags="${LDFLAGS}" -o ./bin/dagu ./cmd
 
 # Stage 3: Final Image
 FROM --platform=$BUILDPLATFORM alpine:latest
@@ -53,15 +53,26 @@ COPY files/start.sh /start.sh
 COPY files/lsiown /usr/bin/lsiown
 
 # Create user, set permissions, set default TZ
-RUN apk update && \
-    apk add --no-cache bash bash-completion curl openssh shadow sudo tzdata && \
-    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
-    addgroup -g ${PGID} ${USER} && \
-    adduser ${USER} -h /home/${USER} -u ${PUID} -G ${USER} -D -s /bin/bash && \
-    usermod -a -G wheel ${USER} && \
-    sed -i -e "s/^#.%wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/" /etc/sudoers && \
-    chmod +x /start.sh && \
-    chmod +x /usr/bin/lsiown
+RUN apk update \
+    && apk add --no-cache \
+        bash \
+        bash-completion \
+        curl \
+        jq \
+        openssh \
+        shadow \
+        sudo \
+        wget \
+        tzdata \
+        unzip \
+        zip \
+    && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
+    && addgroup -g ${PGID} ${USER} \
+    && adduser ${USER} -h /home/${USER} -u ${PUID} -G ${USER} -D -s /bin/bash \
+    && usermod -a -G wheel ${USER} \
+    && sed -i -e "s/^#.%wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/" /etc/sudoers \
+    && chmod +x /start.sh \
+    && chmod +x /usr/bin/lsiown
 
 USER ${USER}
 

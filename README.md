@@ -1,6 +1,9 @@
 # dagu-docker
 
+[Dagu](https://github.com/dagu-org/dagu) docker image Alpine based.
+
 docker-compose.yml
+
 ```yaml
 services:
   dagu:
@@ -16,4 +19,3 @@ services:
     ports:
       - 8145:8080
 ```
-
