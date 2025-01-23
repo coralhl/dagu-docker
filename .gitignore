@@ -68,3 +68,4 @@ debug.test*
 node_modules/
 
 build.sh
+buildah-reg.sh
