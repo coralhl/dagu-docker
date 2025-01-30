@@ -1,7 +1,7 @@
 ARG VERSION=1.16.0
 
 # Stage 1: UI Builder
-FROM --platform=$BUILDPLATFORM node:18-alpine AS ui-builder
+FROM docker.io/node:18-alpine AS ui-builder
 
 ARG VERSION
 
@@ -17,11 +17,11 @@ RUN mkdir /app && \
 WORKDIR /app
 
 RUN rm -rf node_modules && \
-    yarn install --frozen-lockfile --non-interactive && \
+    yarn install --network-timeout 1000000 --frozen-lockfile --non-interactive && \
     yarn build
 
 # Stage 2: Go Builder
-FROM --platform=$BUILDPLATFORM golang:1.23-alpine AS go-builder
+FROM docker.io/golang:1.23-alpine AS go-builder
 
 ARG LDFLAGS
 ARG TARGETOS
@@ -37,7 +37,7 @@ COPY --from=ui-builder /app/dist/ ./internal/frontend/assets/
 RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build -ldflags="${LDFLAGS}" -o ./bin/dagu ./cmd
 
 # Stage 3: Final Image
-FROM --platform=$BUILDPLATFORM alpine:latest
+FROM docker.io/alpine:latest
 
 ARG USER="abc"
 ARG PUID=1000
