@@ -1,0 +1,46 @@
+name: build and publish
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:    
+
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: coralhl/dagu
+  IMAGE_TAG: "latest 1.16.0"
+  IMAGE_PLATFORMS: linux/amd64,linux/arm64
+
+jobs:
+  build:
+    runs-on: builder-host
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: ${{ env.IMAGE_PLATFORMS }}
+
+      - name: Build Image
+        id: build_image_multiplatform
+        uses: https://git.xciii.ru/coral/buildah-action@main
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: ${{ env.IMAGE_TAG }}
+          platforms: ${{ env.IMAGE_PLATFORMS }}
+          push: true
+          registry: ${{ env.REGISTRY }}
+          registry_username: ${{ secrets.DOCKERHUB_USERNAME }}
+          registry_password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Copy from Reg to Local Storage
+        uses: https://git.xciii.ru/coral/skopeo-action@main
+        with:
+          source: docker://${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          target: docker://${{ secrets.PRIV_REG }}/${{ secrets.PRIV_REG_USERNAME }}/dagu:latest
+          source_username: ${{ secrets.DOCKERHUB_USERNAME }}
+          source_password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          target_username: ${{ secrets.PRIV_REG_USERNAME }}
+          target_password: ${{ secrets.PRIV_REG_PASSWORD }}
