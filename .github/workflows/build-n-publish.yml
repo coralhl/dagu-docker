@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Image
         id: build_image_multiplatform
-        uses: https://git.xciii.ru/coral/buildah-action@main
+        uses: coralhl/buildah-action@main
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: ${{ env.IMAGE_TAG }}
@@ -36,7 +36,7 @@ jobs:
           registry_password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Copy from Reg to Local Storage
-        uses: https://git.xciii.ru/coral/skopeo-action@main
+        uses: coralhl/skopeo-action@main
         with:
           source: docker://${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           target: docker://${{ secrets.PRIV_REG }}/${{ secrets.PRIV_REG_USERNAME }}/dagu:latest
