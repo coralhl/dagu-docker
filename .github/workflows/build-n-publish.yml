@@ -8,7 +8,7 @@ on:
 env:
   REGISTRY: docker.io
   IMAGE_NAME: coralhl/dagu
-  IMAGE_TAG: "latest 1.16.8"
+  IMAGE_TAG: "1.16.12"
   IMAGE_PLATFORMS: linux/amd64,linux/arm64
 
 jobs:
@@ -35,7 +35,27 @@ jobs:
           registry_username: ${{ secrets.DOCKERHUB_USERNAME }}
           registry_password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Copy from DH to Private Registry
+      - name: Copy from DH to DH latest
+        uses: coralhl/skopeo-action@main
+        with:
+          source: docker://${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          target: docker://${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          source_username: ${{ secrets.DOCKERHUB_USERNAME }}
+          source_password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          target_username: ${{ secrets.DOCKERHUB_USERNAME }}
+          target_password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Copy from DH to Private Registry version
+        uses: coralhl/skopeo-action@main
+        with:
+          source: docker://${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          target: docker://${{ secrets.PRIV_REG }}/${{ secrets.PRIV_REG_USERNAME }}/dagu:${{ env.IMAGE_TAG }}
+          source_username: ${{ secrets.DOCKERHUB_USERNAME }}
+          source_password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          target_username: ${{ secrets.PRIV_REG_USERNAME }}
+          target_password: ${{ secrets.PRIV_REG_PASSWORD }}
+
+      - name: Copy from DH to Private Registry latest
         uses: coralhl/skopeo-action@main
         with:
           source: docker://${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
