@@ -1,4 +1,4 @@
-ARG VERSION=1.16.12
+ARG VERSION=1.17.0-beta.12
 
 # Stage 1: UI Builder
 FROM docker.io/node:20-alpine AS ui-builder
