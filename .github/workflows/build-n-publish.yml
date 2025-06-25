@@ -8,7 +8,7 @@ on:
 env:
   REGISTRY: docker.io
   IMAGE_NAME: coralhl/dagu
-  IMAGE_TAG: "1.17.0-beta.12"
+  IMAGE_TAG: "1.17.2"
   IMAGE_PLATFORMS: linux/amd64,linux/arm64
 
 jobs:
