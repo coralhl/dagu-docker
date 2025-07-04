@@ -1,4 +1,4 @@
-ARG VERSION=1.17.2
+ARG VERSION=1.17.4
 
 # Stage 1: UI Builder
 FROM docker.io/node:20-alpine AS ui-builder
