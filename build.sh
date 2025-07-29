@@ -9,7 +9,7 @@ if ! [ -f $versioning_file ]; then
   docker buildx build --progress=plain -f Dockerfile \
     --output type=docker \
     -t $user_name/$image_name:latest .
-  #docker push $user_name/$image_name:latest
+  docker push $user_name/$image_name:latest
 else
   tag_name=$(cat "$versioning_file")
   echo "Let's buld & push image with tags *latest*, *$tag_name*"
@@ -17,6 +17,6 @@ else
     --output type=docker \
     --build-arg VERSION=$tag_name \
     -t $user_name/$image_name:$tag_name -t $user_name/$image_name:latest .
-  #docker push $user_name/$image_name:$tag_name
-  #docker push $user_name/$image_name:latest
+  docker push $user_name/$image_name:$tag_name
+  docker push $user_name/$image_name:latest
 fi
