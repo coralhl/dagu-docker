@@ -1,4 +1,4 @@
-ARG VERSION=1.18.0
+ARG VERSION=1.20.0
 
 # Stage 1: UI Builder
 FROM --platform=$BUILDPLATFORM reg.xciii.ru/dh/node:24-alpine AS ui-builder
